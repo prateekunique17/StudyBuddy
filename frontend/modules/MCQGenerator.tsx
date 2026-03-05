@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { GlassCard, LoadingSkeleton } from '../components/GlassCard';
-import { generateMCQs } from '../services/geminiService';
+import { generateMCQs } from '../services/aiService';
 import { MCQ } from '../types';
 
 export const MCQGenerator: React.FC = () => {
@@ -70,14 +70,14 @@ export const MCQGenerator: React.FC = () => {
         <div className="space-y-6">
           <div className="flex justify-between items-center px-2">
             <h3 className="text-xl font-bold text-white">Question Set ({questions.length})</h3>
-            <button 
+            <button
               onClick={() => setRevealed(questions.map((_, i) => i))}
               className="text-emerald-400 text-sm font-semibold hover:underline"
             >
               Reveal All Answers
             </button>
           </div>
-          
+
           {questions.map((q, idx) => (
             <GlassCard key={idx} className="group border border-white/5 hover:border-emerald-500/30 transition-all">
               <div className="flex gap-4">
@@ -101,7 +101,7 @@ export const MCQGenerator: React.FC = () => {
                         Correct Answer: {q.answer}
                       </div>
                     ) : (
-                      <button 
+                      <button
                         onClick={() => toggleReveal(idx)}
                         className="text-slate-500 text-xs hover:text-emerald-400 transition-colors uppercase tracking-widest font-bold"
                       >

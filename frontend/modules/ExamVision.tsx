@@ -1,7 +1,9 @@
 
 import React, { useState, useRef } from 'react';
 import { GlassCard, LoadingSkeleton } from '../components/GlassCard';
-import { analyzeQuestionImage } from '../services/geminiService';
+import { analyzeQuestionImage } from '../services/aiService';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export const ExamVision: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
@@ -41,7 +43,7 @@ export const ExamVision: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <header>
         <h2 className="text-3xl font-bold text-white mb-2">ExamVision</h2>
-        <p className="text-slate-400">Upload a photo of a problem, and let Gemini solve it step-by-step.</p>
+        <p className="text-slate-400">Upload a photo of a problem, and let our AI solve it step-by-step.</p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -49,7 +51,7 @@ export const ExamVision: React.FC = () => {
           {image ? (
             <div className="relative group w-full">
               <img src={image} alt="Problem preview" className="rounded-xl max-h-[350px] mx-auto object-contain" />
-              <button 
+              <button
                 onClick={() => { setImage(null); setSolution(''); }}
                 className="absolute top-2 right-2 p-2 bg-red-500/80 hover:bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
               >
@@ -62,7 +64,7 @@ export const ExamVision: React.FC = () => {
                 <svg className="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
               </div>
               <p className="text-slate-400 mb-4">Drag and drop or click to upload</p>
-              <button 
+              <button
                 onClick={() => fileInputRef.current?.click()}
                 className="px-6 py-2 glass glass-hover rounded-lg text-sm text-white"
               >
@@ -87,10 +89,10 @@ export const ExamVision: React.FC = () => {
               <LoadingSkeleton />
             </GlassCard>
           ) : solution ? (
-            <GlassCard title="Step-by-Step Solution" className="prose prose-invert h-[400px] overflow-y-auto">
-              <div className="whitespace-pre-wrap text-slate-300 leading-relaxed text-sm">
+            <GlassCard title="Step-by-Step Solution" className="prose prose-invert prose-orange max-w-none h-[400px] overflow-y-auto">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {solution}
-              </div>
+              </ReactMarkdown>
             </GlassCard>
           ) : (
             <GlassCard className="h-[400px] flex items-center justify-center text-slate-500 text-center italic">

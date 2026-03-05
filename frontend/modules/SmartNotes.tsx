@@ -1,7 +1,9 @@
 
 import React, { useState } from 'react';
 import { GlassCard, LoadingSkeleton } from '../components/GlassCard';
-import { generateSmartNotes } from '../services/geminiService';
+import { generateSmartNotes } from '../services/aiService';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export const SmartNotes: React.FC = () => {
   const [input, setInput] = useState('');
@@ -52,10 +54,10 @@ export const SmartNotes: React.FC = () => {
               <LoadingSkeleton />
             </GlassCard>
           ) : refined ? (
-            <GlassCard title="Formatted Output" className="prose prose-invert h-[585px] overflow-y-auto">
-              <div className="whitespace-pre-wrap text-slate-300 leading-relaxed text-sm">
+            <GlassCard title="Formatted Output" className="prose prose-invert prose-orange max-w-none h-[585px] overflow-y-auto">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {refined}
-              </div>
+              </ReactMarkdown>
             </GlassCard>
           ) : (
             <div className="h-[585px] glass rounded-2xl border-dashed border-2 border-white/5 flex items-center justify-center text-slate-600 italic px-8 text-center">

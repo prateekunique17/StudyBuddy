@@ -1,7 +1,9 @@
 
 import React, { useState } from 'react';
 import { GlassCard, LoadingSkeleton } from '../components/GlassCard';
-import { generateCareerRoadmap } from '../services/geminiService';
+import { generateCareerRoadmap } from '../services/aiService';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export const CareerRoadmap: React.FC = () => {
   const [goal, setGoal] = useState('');
@@ -34,8 +36,8 @@ export const CareerRoadmap: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-slate-400 mb-2">Dream Role</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
               placeholder="e.g., Senior AI Engineer"
               value={goal}
@@ -44,8 +46,8 @@ export const CareerRoadmap: React.FC = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-400 mb-2">Current Skills</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
               placeholder="e.g., Python, React basics, Calculus"
               value={skills}
@@ -65,10 +67,10 @@ export const CareerRoadmap: React.FC = () => {
       {loading && <GlassCard title="Mapping Your Future..."><LoadingSkeleton /></GlassCard>}
 
       {roadmap && !loading && (
-        <GlassCard title="Your Strategic Roadmap" className="prose prose-invert max-w-none">
-          <div className="whitespace-pre-wrap text-slate-300 leading-relaxed">
+        <GlassCard title="Your Strategic Roadmap" className="prose prose-invert prose-orange max-w-none">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {roadmap}
-          </div>
+          </ReactMarkdown>
         </GlassCard>
       )}
     </div>

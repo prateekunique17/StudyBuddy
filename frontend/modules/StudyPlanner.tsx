@@ -1,7 +1,9 @@
 
 import React, { useState } from 'react';
 import { GlassCard, LoadingSkeleton } from '../components/GlassCard';
-import { generateStudyPlan } from '../services/geminiService';
+import { generateStudyPlan } from '../services/aiService';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export const StudyPlanner: React.FC = () => {
   const [syllabus, setSyllabus] = useState('');
@@ -55,10 +57,10 @@ export const StudyPlanner: React.FC = () => {
       )}
 
       {plan && !loading && (
-        <GlassCard title="Your Custom Roadmap" className="prose prose-invert max-w-none">
-          <div className="whitespace-pre-wrap text-slate-300 leading-relaxed">
+        <GlassCard title="Your Custom Roadmap" className="prose prose-invert prose-orange max-w-none">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {plan}
-          </div>
+          </ReactMarkdown>
         </GlassCard>
       )}
     </div>

@@ -1,7 +1,9 @@
 
 import React, { useState } from 'react';
 import { GlassCard, LoadingSkeleton } from '../components/GlassCard';
-import { summarizeLecture } from '../services/geminiService';
+import { summarizeLecture } from '../services/aiService';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export const LectureNotes: React.FC = () => {
   const [transcript, setTranscript] = useState('');
@@ -52,10 +54,10 @@ export const LectureNotes: React.FC = () => {
       {loading && <GlassCard title="Analyzing Structure..."><LoadingSkeleton /></GlassCard>}
 
       {notes && !loading && (
-        <GlassCard title="Smart Summary" className="prose prose-invert max-w-none">
-          <div className="whitespace-pre-wrap text-slate-300 leading-relaxed">
+        <GlassCard title="Smart Summary" className="prose prose-invert prose-orange max-w-none">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {notes}
-          </div>
+          </ReactMarkdown>
         </GlassCard>
       )}
     </div>
