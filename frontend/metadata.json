@@ -1,8 +1,0 @@
-
-{
-  "name": "StudyBuddy AI",
-  "description": "A unified AI academic companion featuring an AI Study Planner, Lecture2Notes, ExamVision (multimodal problem solving), and Career Roadmap analysis.",
-  "requestFramePermissions": [
-    "camera"
-  ]
-}

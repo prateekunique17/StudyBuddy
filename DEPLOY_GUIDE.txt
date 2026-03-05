@@ -1,0 +1,102 @@
+# StudyBuddy AI Deployment Guide
+
+Since StudyBuddy is currently a Frontend-Heavy application (it talks directly to Gemini and Supabase), you can deploy it for FREE in less than 5 minutes.
+
+## 🌟 Recommended Service: Vercel (Free & Easiest)
+
+### Step 1: Connect your GitHub
+1. Go to [https://vercel.com](https://vercel.com) and sign in with your GitHub account.
+2. Click the **"Add New"** button -> **"Project"**.
+3. Select your **StudyBuddy** repository and click "Import".
+
+### Step 2: Configure the Folder
+Because your code is inside a subfolder, you MUST tell Vercel where to look:
+1. In the "Project Settings", look for **Root Directory**.
+2. Click the folder icon and select the **"frontend"** folder.
+3. Click "Continue".
+
+### Step 3: Add Your Secret Keys (VERY IMPORTANT)
+Vercel cannot see your `.env` files (we blocked them for security). You must manually add your keys so the AI works:
+1. Expand the **Environment Variables** section.
+2. Add the following three keys exactly:
+
+   - **Key:** `VITE_GEMINI_API_KEY`  
+     **Value:** (Paste your Google Gemini Key)
+
+   - **Key:** `VITE_SUPABASE_URL`  
+     **Value:** (Paste your Supabase Project URL)
+
+   - **Key:** `VITE_SUPABASE_ANON_KEY`  
+     **Value:** (Paste your Supabase Anon/Public Key)
+
+3. Click "Add" after typing each one.
+
+### Step 4: Deploy
+1. Click the **"Deploy"** button.
+2. Wait about 60 seconds for the build to finish.
+3. Your site will be live at a URL like `studybuddy-ai-yourname.vercel.app`!
+
+---
+
+## 🛑 Common Troubleshooting
+
+### "My Gemini API Key is Finished"
+If you get a "429 Quota Exceeded" error on your live site:
+1. Create a new Gemini API key in Google AI Studio.
+2. Go to your **Vercel Dashboard** -> **Settings** -> **Environment Variables**.
+3. Find `VITE_GEMINI_API_KEY`, click edit, and paste the NEW key.
+4. Go to the **Deployments** tab and click "Redeploy" so the app picks up the new key.
+
+### "Supabase data is not showing"
+1. Make sure you set up the **Row Level Security (RLS)** policy in Supabase as we discussed in the section below.
+
+---
+
+## 🏗️ 6. Supabase Database Setup & Commands
+
+If you are setting up a fresh Supabase project, you must run these commands in the **SQL Editor** (icon that looks like `>_`) to create the requirements for the Dashboard.
+
+### Step 1: Create the Logs Table
+Copy and paste this into the SQL Editor and click **Run**:
+
+```sql
+-- Create the table to store AI interactions
+CREATE TABLE IF NOT EXISTS ai_logs (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  module_name TEXT NOT NULL,
+  prompt TEXT NOT NULL,
+  response TEXT NOT NULL
+);
+```
+
+### Step 2: Set Security Policies (The most important part!)
+By default, Supabase blocks all traffic. You must run these two commands to allow the app to work:
+
+**Command A: Allow the app to SAVE logs (Insert)**
+```sql
+CREATE POLICY "Allow public insert"
+ON public.ai_logs
+FOR INSERT
+TO public
+WITH CHECK (true);
+```
+
+**Command B: Allow the app to READ logs for Dashboard stats (Select)**
+```sql
+CREATE POLICY "Allow public select"
+ON public.ai_logs
+FOR SELECT
+TO public
+USING (true);
+```
+
+### Step 3: Enable Tables for Dashboard
+1. Go to **Table Editor** on the left.
+2. Select `ai_logs`.
+3. Ensure you see your table here. If it's empty, try using one of the AI tools in your app, and it will auto-populate!
+
+---
+
+## 📁 What about the Backend?
+You do NOT need to deploy the `backend/` folder right now. The current app is 100% functional using just the frontend deployment on Vercel. 
